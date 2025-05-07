@@ -1,0 +1,52 @@
+import 'package:flutter/material.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
+
+import '../../dashboard_karyawan/dashboard_karyawan.dart';
+import '../../profile/page/page.dart';
+
+class HomeKaryawanPage extends StatelessWidget {
+  const HomeKaryawanPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const HomeKaryawanView();
+  }
+}
+
+class HomeKaryawanView extends StatefulWidget {
+  const HomeKaryawanView({super.key});
+
+  @override
+  State<HomeKaryawanView> createState() => _HomeKaryawanViewState();
+}
+
+class _HomeKaryawanViewState extends State<HomeKaryawanView> {
+  int currentIndex = 0;
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.white,
+      bottomNavigationBar: NavigationBar(
+        backgroundColor: Colors.white,
+        selectedIndex: currentIndex,
+        onDestinationSelected: (value) {
+          setState(() {
+            currentIndex = value;
+          });
+        },
+        destinations: [
+          NavigationDestination(
+            icon: Icon(LucideIcons.house),
+            label: 'Dashboard',
+          ),
+
+          NavigationDestination(icon: Icon(LucideIcons.user), label: 'Profile'),
+        ],
+      ),
+      body: IndexedStack(
+        index: currentIndex,
+        children: [DashboardKaryawanPage(), ProfilePage()],
+      ),
+    );
+  }
+}
