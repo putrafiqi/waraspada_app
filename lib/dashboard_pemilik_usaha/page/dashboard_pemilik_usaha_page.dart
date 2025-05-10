@@ -1,7 +1,10 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
 import '../../authencation/authentication.dart';
+import '../../common/blocs/blocs.dart';
 import '../../data/repository/repository.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -65,7 +68,7 @@ class DashboardPemilikUsahaPage extends StatelessWidget {
               ),
         ),
       ],
-      child: DashboardPemilikUsahaView(),
+      child: const DashboardPemilikUsahaView(),
     );
   }
 }
@@ -88,14 +91,14 @@ class _DashboardPemilikUsahaViewState extends State<DashboardPemilikUsahaView> {
 
   @override
   Widget build(BuildContext context) {
+    log('build');
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
         title: const Text('Dashboard'),
-
         forceMaterialTransparency: true,
       ),
-      body: RefreshIndicator(
+      body: _KrefreshIndicator(
         onRefresh: () async {
           await Future.delayed(Duration.zero);
           if (!context.mounted) return;
@@ -128,7 +131,7 @@ class _DashboardPemilikUsahaViewState extends State<DashboardPemilikUsahaView> {
         },
         child: SafeArea(
           child: SingleChildScrollView(
-            padding: EdgeInsets.symmetric(horizontal: 16),
+            padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Column(
               spacing: 16,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -154,7 +157,6 @@ class _DashboardPemilikUsahaViewState extends State<DashboardPemilikUsahaView> {
                     }
                   },
                 ),
-
                 TrenPenyebabStresUsahaWidget(
                   selectedTahun: selectedTahunTrenPenyebabStres,
                   onChangedTahun: (value) {
@@ -176,7 +178,6 @@ class _DashboardPemilikUsahaViewState extends State<DashboardPemilikUsahaView> {
                     }
                   },
                 ),
-
                 DistribusiTingkatStresUsahaWidget(
                   selectedTahun: selectedTahunDistribusiTingkatStres,
                   selectedMonth: selectedMonthDistribusiTingkatStres,
@@ -261,13 +262,28 @@ class _DashboardPemilikUsahaViewState extends State<DashboardPemilikUsahaView> {
                     }
                   },
                 ),
-
-                Gap(16),
+                const Gap(16),
               ],
             ),
           ),
         ),
       ),
+    );
+  }
+}
+
+class _KrefreshIndicator extends StatelessWidget {
+  const _KrefreshIndicator({required this.onRefresh, required this.child});
+
+  final Future<void> Function() onRefresh;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    final isConnected = context.watch<NetworkCheckerBloc>().state.isConnected;
+    return RefreshIndicator(
+      onRefresh: isConnected ? onRefresh : () async {},
+      child: child,
     );
   }
 }

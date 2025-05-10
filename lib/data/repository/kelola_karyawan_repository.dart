@@ -23,9 +23,15 @@ class KelolaKaryawanRepositoryImpl implements KelolaKaryawanRepository {
     try {
       final dataKaryawan = await _kelolaKaryawan.getListKaryawan(usahaId);
       return right(dataKaryawan);
-    } on PostgrestException {
+    } on PostgrestException catch (e) {
+      if(e.message.split(' ')[0] == 'ClientException'){
+        return left('Tidak Ada Koneksi Internet');
+      }
       return left('Gagal mendapatkan data karyawan');
     } on Exception catch (e) {
+      if(e.toString().split(' ')[0] == 'ClientException'){
+        return left('Tidak Ada Koneksi Internet');
+      }
       return left(e.toString());
     }
   }
@@ -39,9 +45,15 @@ class KelolaKaryawanRepositoryImpl implements KelolaKaryawanRepository {
       await _kelolaKaryawan.undangKaryawan(email, usahaId);
       return right(true);
     } on PostgrestException catch(e){
+      if(e.message.split(' ')[0] == 'ClientException'){
+        return left('Tidak Ada Koneksi Internet');
+      }
       log(e.message);
       return left('Gagal mengundang karyawan');
     } on Exception catch (e) {
+      if(e.toString().split(' ')[0] == 'ClientException'){
+        return left('Tidak Ada Koneksi Internet');
+      }
       return left(e.toString());
     }
   }

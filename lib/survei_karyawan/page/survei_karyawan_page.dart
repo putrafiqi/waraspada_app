@@ -4,6 +4,7 @@ import 'package:gap/gap.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 import '../../authencation/authentication.dart';
+import '../../common/blocs/blocs.dart';
 import '../../common/dialog/dialog.dart';
 import '../../common/widget/widget.dart';
 import '../../dashboard_karyawan/dashboard_karyawan.dart';
@@ -88,7 +89,7 @@ class SurveiKaryawanView extends StatelessWidget {
                     style: Theme.of(context).textTheme.titleSmall,
                   ),
                 )
-                : IconButton(
+                : _KiconButton(
                   onPressed: () {
                     final karyawanId =
                         (context.read<AuthBloc>().state as Authenticated)
@@ -239,6 +240,21 @@ class _SoalBoxWidget extends StatelessWidget {
           );
         }
       },
+    );
+  }
+}
+
+class _KiconButton extends StatelessWidget {
+  const _KiconButton({required this.onPressed, required this.icon});
+  final VoidCallback onPressed;
+  final Icon icon;
+
+  @override
+  Widget build(BuildContext context) {
+    final isConnected = context.watch<NetworkCheckerBloc>().state.isConnected;
+    return IconButton(
+      onPressed: isConnected ? onPressed : null,
+      icon: isConnected ? icon : const Icon(LucideIcons.wifiOff),
     );
   }
 }

@@ -2,9 +2,9 @@ import 'package:datepicker_dropdown/datepicker_dropdown.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
+import '../../common/dialog/dialog.dart';
 import '../../common/widget/widget.dart';
 import '../bloc/tren_penyebab_stres_karyawan/tren_penyebab_stres_karyawan_bloc.dart';
 
@@ -84,7 +84,7 @@ class TrenPenyebabStresKaryawanWidget extends StatelessWidget {
             >(
               listener: (context, state) {
                 if (state.status == TrenPenyebabStresKaryawanStatus.failure) {
-                  Fluttertoast.showToast(msg: state.errorMessage!);
+                  ShowToast.showEror(state.errorMessage ?? 'Terjadi Kesalahan');
                 }
               },
               builder: (context, state) {

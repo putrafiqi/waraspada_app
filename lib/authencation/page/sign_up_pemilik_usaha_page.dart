@@ -9,6 +9,7 @@ import 'package:gap/gap.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
+import '../../common/blocs/blocs.dart';
 import '../../common/dialog/dialog.dart';
 import '../../common/widget/widget.dart';
 import '../bloc/auth_bloc.dart';
@@ -415,43 +416,68 @@ class _SignUpPemilikUsahaViewState extends State<SignUpPemilikUsahaView> {
                         child: Text('Kembali'),
                       ),
 
-                      FilledButton(
-                        onPressed: () {
-                          if (activeStep == 0) {
-                            if (formKeyAkun.currentState!.validate() &&
-                                profileFile != null) {
-                              setState(() {
-                                activeStep++;
-                              });
-                            }
-                          } else if (activeStep == 1) {
-                            if (formKeyUsaha.currentState!.validate() &&
-                                logoFile != null) {
-                              log(jenisKelaminController.text);
+                      Builder(
+                        builder: (context) {
+                          final isConnected =
+                              context
+                                  .read<NetworkCheckerBloc>()
+                                  .state
+                                  .isConnected;
+                          return FilledButton(
+                            onPressed:
+                                !isConnected
+                                    ? null
+                                    : () {
+                                      if (activeStep == 0) {
+                                        if (formKeyAkun.currentState!
+                                                .validate() &&
+                                            profileFile != null) {
+                                          setState(() {
+                                            activeStep++;
+                                          });
+                                        }
+                                      } else if (activeStep == 1) {
+                                        if (formKeyUsaha.currentState!
+                                                .validate() &&
+                                            logoFile != null) {
+                                          log(jenisKelaminController.text);
 
-                              context.read<AuthBloc>().add(
-                                AuthSignUpPemilikUsahaRequested(
-                                  emailController.text.trim(),
-                                  passwordController.text.trim(),
-                                  namaLengkapController.text.trim(),
-                                  namaUsahaController.text.trim(),
-                                  alamatUsahaController.text.trim(),
-                                  jenisKelaminController.text.trim(),
-                                  profileFile!,
-                                  logoFile!,
+                                          context.read<AuthBloc>().add(
+                                            AuthSignUpPemilikUsahaRequested(
+                                              emailController.text.trim(),
+                                              passwordController.text.trim(),
+                                              namaLengkapController.text.trim(),
+                                              namaUsahaController.text.trim(),
+                                              alamatUsahaController.text.trim(),
+                                              jenisKelaminController.text
+                                                  .trim(),
+                                              profileFile!,
+                                              logoFile!,
+                                            ),
+                                          );
+                                        }
+                                      }
+                                    },
+
+                            style: FilledButton.styleFrom(
+                              disabledForegroundColor: Colors.grey.shade600,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(8),
                                 ),
-                              );
-                            }
-                          }
+                              ),
+                              // minimumSize: Size.fromHeight(46),
+                            ),
+                            child:
+                                isConnected
+                                    ? Text(
+                                      activeStep == 0
+                                          ? 'Selanjutnya'
+                                          : 'Daftar',
+                                    )
+                                    : const Icon(LucideIcons.wifiOff),
+                          );
                         },
-
-                        style: FilledButton.styleFrom(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(8)),
-                          ),
-                          // minimumSize: Size.fromHeight(46),
-                        ),
-                        child: Text(activeStep == 0 ? 'Selanjutnya' : 'Daftar'),
                       ),
                     ],
                   ),

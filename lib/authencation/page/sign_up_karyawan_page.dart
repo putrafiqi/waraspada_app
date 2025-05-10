@@ -7,6 +7,7 @@ import 'package:gap/gap.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
+import '../../common/blocs/blocs.dart';
 import '../../common/dialog/dialog.dart';
 import '../../common/widget/widget.dart';
 import '../bloc/auth_bloc.dart';
@@ -263,30 +264,48 @@ class _SignUpKaryawanViewState extends State<SignUpKaryawanView> {
                       ),
 
                       Gap(24),
-                      FilledButton(
-                        onPressed: () {
-                          if (formKey.currentState!.validate() &&
-                              profileFile != null) {
-                            context.read<AuthBloc>().add(
-                              AuthSignUpKaryawanRequested(
-                                emailController.text.trim(),
-                                passwordController.text.trim(),
-                                namaLengkapController.text.trim(),
-                                kodeUndanganController.text.trim(),
-                                jenisKelaminController.text.trim(),
-                                profileFile!,
-                              ),
-                            );
-                          }
-                        },
+                      Builder(
+                        builder: (context) {
+                          final isConnected =
+                              context
+                                  .watch<NetworkCheckerBloc>()
+                                  .state
+                                  .isConnected;
+                          return FilledButton(
+                            onPressed:
+                                !isConnected
+                                    ? null
+                                    : () {
+                                      if (formKey.currentState!.validate() &&
+                                          profileFile != null) {
+                                        context.read<AuthBloc>().add(
+                                          AuthSignUpKaryawanRequested(
+                                            emailController.text.trim(),
+                                            passwordController.text.trim(),
+                                            namaLengkapController.text.trim(),
+                                            kodeUndanganController.text.trim(),
+                                            jenisKelaminController.text.trim(),
+                                            profileFile!,
+                                          ),
+                                        );
+                                      }
+                                    },
 
-                        style: FilledButton.styleFrom(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(8)),
-                          ),
-                          minimumSize: Size.fromHeight(46),
-                        ),
-                        child: Text('Daftar'),
+                            style: FilledButton.styleFrom(
+                              disabledForegroundColor: Colors.grey.shade600,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(8),
+                                ),
+                              ),
+                              minimumSize: Size.fromHeight(46),
+                            ),
+                            child:
+                                isConnected
+                                    ? const Text('Daftar')
+                                    : const Icon(LucideIcons.wifiOff),
+                          );
+                        },
                       ),
                     ],
                   ),

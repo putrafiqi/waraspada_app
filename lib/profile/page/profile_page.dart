@@ -31,12 +31,12 @@ class ProfileView extends StatelessWidget {
                 Container(
                   height: 200,
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.vertical(
+                    borderRadius: const BorderRadius.vertical(
                       bottom: Radius.circular(16),
                     ),
                     image: DecorationImage(
                       image: CachedNetworkImageProvider(user.logoUrl),
-                      colorFilter: ColorFilter.mode(
+                      colorFilter: const ColorFilter.mode(
                         Colors.black26,
                         BlendMode.darken,
                       ),

@@ -64,10 +64,19 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
       );
       return right(user);
     } on supabase.AuthException catch (e) {
+      if(e.message.split(' ')[0] == 'ClientException'){
+        return left(AuthException('Tidak Ada Koneksi Internet'));
+      }
       return left(AuthException(e.message));
     } on supabase.PostgrestException catch (e) {
+      if(e.message.split(' ')[0] == 'ClientException'){
+        return left(AuthException('Tidak Ada Koneksi Internet'));
+      }
       return left(AuthException(e.message));
     } catch (e) {
+      if(e.toString().split(' ')[0] == 'ClientException'){
+        return left(AuthException('Tidak Ada Koneksi Internet'));
+      }
       return left(AuthException(e.toString()));
     }
   }
@@ -83,10 +92,19 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
       final user = await _authenticationApi.getCurrentUser();
       return right(user);
     } on supabase.AuthException catch (e) {
+      if(e.message.split(' ')[0] == 'ClientException'){
+        return left(AuthException('Tidak Ada Koneksi Internet'));
+      }
       return left(AuthException(e.message));
     } on supabase.PostgrestException catch (e) {
+      if(e.message.split(' ')[0] == 'ClientException'){
+        return left(AuthException('Tidak Ada Koneksi Internet'));
+      }
       return left(AuthException(e.message));
     } catch (e) {
+      if(e.toString().split(' ')[0] == 'ClientException'){
+        return left(AuthException('Tidak Ada Koneksi Internet'));
+      }
       return left(AuthException(e.toString()));
     }
   }
@@ -120,10 +138,21 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
       );
       return right(user);
     } on supabase.AuthException catch (e) {
+      log('AuthException: ${e.message}');
+      if(e.message.split(' ')[0] == 'ClientException'){
+        return left(AuthException('Tidak Ada Koneksi Internet'));
+      }
       return left(AuthException(e.message));
     } on supabase.PostgrestException catch (e) {
+      log('PostgrestException: ${e.message}');
+      if(e.message.split(' ')[0] == 'ClientException'){
+        return left(AuthException('Tidak Ada Koneksi Internet'));
+      }
       return left(AuthException(e.message));
     } catch (e) {
+      if(e.toString().split(' ')[0] == 'ClientException'){
+        return left(AuthException('Tidak Ada Koneksi Internet'));
+      }
       return left(AuthException(e.toString()));
     }
   }
@@ -152,12 +181,21 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
       );
       return right(user);
     } on supabase.AuthException catch (e) {
+      if(e.message.split(' ')[0] == 'ClientException'){
+        return left(AuthException('Tidak Ada Koneksi Internet'));
+      }
       log('AuthException: ${e.message}');
       return left(AuthException(e.message));
     } on supabase.PostgrestException catch (e) {
+      if(e.message.split(' ')[0] == 'ClientException'){
+        return left(AuthException('Tidak Ada Koneksi Internet'));
+      }
       log('PostgrestException: ${e.message}');
       return left(AuthException(e.message));
     } catch (e) {
+      if(e.toString().split(' ')[0] == 'ClientException'){
+        return left(AuthException('Tidak Ada Koneksi Internet'));
+      }
       return left(AuthException(e.toString()));
     }
   }

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:form_validator/form_validator.dart';
-import 'package:gap/gap.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 import '../../authencation/authentication.dart';
+import '../../common/blocs/blocs.dart';
 import '../../common/dialog/dialog.dart';
 import '../../common/widget/widget.dart';
 import '../../data/data.dart';
@@ -48,7 +48,7 @@ class _KelolaKaryawanViewState extends State<KelolaKaryawanView> {
       ),
       backgroundColor: Colors.white,
 
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: _KfloatingActionButton(
         onPressed: () {
           showDialog<bool>(
             barrierDismissible: false,
@@ -87,15 +87,15 @@ class _KelolaKaryawanViewState extends State<KelolaKaryawanView> {
                       key: emailFormKey,
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
+                        spacing: 16,
                         children: [
                           Text('Undang Karyawan', style: textTheme.titleLarge),
-                          Gap(16),
                           Column(
                             mainAxisSize: MainAxisSize.min,
                             crossAxisAlignment: CrossAxisAlignment.start,
+                            spacing: 8,
                             children: [
                               Text('Email', style: textTheme.labelLarge),
-                              Gap(8),
                               TextFormField(
                                 keyboardType: TextInputType.emailAddress,
                                 controller: emailController,
@@ -106,7 +106,7 @@ class _KelolaKaryawanViewState extends State<KelolaKaryawanView> {
                                 onTapOutside: (_) {
                                   FocusScope.of(context).unfocus();
                                 },
-                                decoration: InputDecoration(
+                                decoration: const InputDecoration(
                                   hintText: 'Masukan email karyawan anda',
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.all(
@@ -128,7 +128,7 @@ class _KelolaKaryawanViewState extends State<KelolaKaryawanView> {
         },
         child: Icon(LucideIcons.plus),
       ),
-      body: RefreshIndicator(
+      body: _KrefreshIndicator(
         onRefresh: () async {
           await Future.delayed(Duration.zero);
           if (!context.mounted) return;
@@ -165,7 +165,7 @@ class _KelolaKaryawanViewState extends State<KelolaKaryawanView> {
             }
             return ListView.builder(
               itemCount: state.listKaryawan.length,
-              padding: EdgeInsets.symmetric(horizontal: 16),
+              padding: const EdgeInsets.symmetric(horizontal: 16),
               itemBuilder: (context, index) {
                 final karyawan = state.listKaryawan[index];
                 return Padding(
@@ -174,7 +174,7 @@ class _KelolaKaryawanViewState extends State<KelolaKaryawanView> {
                     tileColor: Colors.white,
                     shape: RoundedRectangleBorder(
                       side: BorderSide(color: Colors.grey.shade200),
-                      borderRadius: BorderRadius.all(Radius.circular(8)),
+                      borderRadius: const BorderRadius.all(Radius.circular(8)),
                     ),
                     trailing: Text(
                       karyawan.undanganStatus ? 'Aktif' : 'Tidak Aktif',
@@ -184,7 +184,7 @@ class _KelolaKaryawanViewState extends State<KelolaKaryawanView> {
                           karyawan.profileUrl != null
                               ? NetworkImage(karyawan.profileUrl!)
                               : null,
-                      child: Icon(LucideIcons.user),
+                      child: const Icon(LucideIcons.user),
                     ),
                     title: Text(karyawan.namaLengkap ?? '-'),
                     subtitle: Text(karyawan.email),
@@ -195,6 +195,38 @@ class _KelolaKaryawanViewState extends State<KelolaKaryawanView> {
           },
         ),
       ),
+    );
+  }
+}
+
+class _KrefreshIndicator extends StatelessWidget {
+  const _KrefreshIndicator({required this.onRefresh, required this.child});
+
+  final Future<void> Function() onRefresh;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    final isConnected = context.watch<NetworkCheckerBloc>().state.isConnected;
+    return RefreshIndicator(
+      onRefresh: isConnected ? onRefresh : () async {},
+      child: child,
+    );
+  }
+}
+
+class _KfloatingActionButton extends StatelessWidget {
+  const _KfloatingActionButton({required this.onPressed, required this.child});
+
+  final VoidCallback onPressed;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    final isConnected = context.watch<NetworkCheckerBloc>().state.isConnected;
+    return FloatingActionButton(
+      onPressed: isConnected ? onPressed : null,
+      child: child,
     );
   }
 }

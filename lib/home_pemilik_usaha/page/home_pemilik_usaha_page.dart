@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
+import '../../common/blocs/blocs.dart';
+import '../../common/dialog/dialog.dart';
 import '../../dashboard_pemilik_usaha/dashboard_pemilik_usaha.dart';
 import '../../kelola_karyawan/kelola_karyawan.dart';
 import '../../profile/page/page.dart';
@@ -38,25 +41,35 @@ class _HomePemilikUsahaViewState extends State<HomePemilikUsahaView> {
           });
         },
         destinations: [
-          NavigationDestination(
+          const NavigationDestination(
             icon: Icon(LucideIcons.house),
             label: 'Dashboard',
           ),
-          NavigationDestination(
+          const NavigationDestination(
             icon: Icon(LucideIcons.usersRound),
             label: 'Kelola Karyawan',
           ),
-          NavigationDestination(icon: Icon(LucideIcons.user), label: 'Profile'),
+          const NavigationDestination(
+            icon: Icon(LucideIcons.user),
+            label: 'Profile',
+          ),
         ],
       ),
 
-      body: IndexedStack(
-        index: currentIndex,
-        children: [
-          DashboardPemilikUsahaPage(),
-          KelolaKaryawanPage(),
-          ProfilePage(),
-        ],
+      body: BlocListener<NetworkCheckerBloc, NetworkCheckerState>(
+        listener: (context, state) {
+          if (!state.isConnected) {
+            ShowToast.showEror('Tidak ada koneksi internet');
+          }
+        },
+        child: IndexedStack(
+          index: currentIndex,
+          children: [
+            const DashboardPemilikUsahaPage(),
+            const KelolaKaryawanPage(),
+            const ProfilePage(),
+          ],
+        ),
       ),
     );
   }

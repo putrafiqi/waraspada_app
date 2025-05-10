@@ -3,10 +3,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:talker_bloc_logger/talker_bloc_logger.dart';
-import 'package:waraspada_app/splash_screen.dart';
 
 import 'authencation/bloc/auth_bloc.dart';
+import 'common/blocs/blocs.dart';
 import 'data/data.dart';
+import 'splash_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -72,11 +73,21 @@ class AppView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create:
-          (context) =>
-              AuthBloc(context.read<AuthenticationRepository>())
-                ..add(AuthCheckRequested()),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create:
+              (context) =>
+                  AuthBloc(context.read<AuthenticationRepository>())
+                    ..add(AuthCheckRequested()),
+        ),
+        BlocProvider(
+          create:
+              (context) =>
+                  NetworkCheckerBloc()
+                    ..add(NetworkCheckerSubscriptionRequested()),
+        ),
+      ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Waraspada',

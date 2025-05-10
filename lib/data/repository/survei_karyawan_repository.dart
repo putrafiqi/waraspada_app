@@ -32,9 +32,15 @@ class SurveiKaryawanRepositoryImpl implements SurveiKaryawanRepository {
       );
       return right(response);
     } on PostgrestException catch (e) {
+      if(e.message.split(' ')[0] == 'ClientException') {
+        return left('Tidak ada koneksi internet');
+      }
       log(e.message);
       return left(e.message);
     } catch (e, r) {
+      if(e.toString().split(' ')[0] == 'ClientException') {
+        return left('Tidak ada koneksi internet');
+      }
       log(r.toString());
       log(e.toString());
       return left(e.toString());
@@ -53,9 +59,15 @@ class SurveiKaryawanRepositoryImpl implements SurveiKaryawanRepository {
       );
       return right(response);
     } on PostgrestException catch (e) {
+      if(e.message.split(' ')[0] == 'ClientException') {
+        return left('Tidak ada koneksi internet');
+      }
       log(e.message);
       return left(e.message);
     } catch (e) {
+      if(e.toString().split(' ')[0] == 'ClientException') {
+        return left('Tidak ada koneksi internet');
+      }
       log(e.toString());
       return left(e.toString());
     }
@@ -67,6 +79,9 @@ class SurveiKaryawanRepositoryImpl implements SurveiKaryawanRepository {
       final response = await _surveiKaryawanApi.ambilListSoalSurvei();
       return right(response);
     } catch (e) {
+      if(e.toString().split(' ')[0] == 'ClientException') {
+        return left('Tidak ada koneksi internet');
+      }
       log(e.toString());
       return left(e.toString());
     }

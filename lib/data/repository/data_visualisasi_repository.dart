@@ -57,9 +57,15 @@ class DataVisualisasiRepositoryImpl implements DataVisualisasiRepository {
           .ambilDataVisualisasiTrenPenyebabStresPerBulan(usahaId, tahun);
       return right(response);
     } on PostgrestException catch (e) {
+      if(e.message.split(' ')[0] == 'ClientException'){
+        return left('Tidak Ada Koneksi Internet');
+      }
       log(e.message);
       return left(e.message);
     } catch (e) {
+      if(e.toString().split(' ')[0] == 'ClientException'){
+        return left('Tidak Ada Koneksi Internet');
+      }
       return left(e.toString());
     }
   }
@@ -75,10 +81,16 @@ class DataVisualisasiRepositoryImpl implements DataVisualisasiRepository {
           .ambilDataVisualisasiTrenTingkatStresPerBulan(usahaId, tahun);
       return right(response);
     } on PostgrestException catch (e) {
+      if(e.message.split(' ')[0] == 'ClientException'){
+        return left('Tidak Ada Koneksi Internet');
+      }
       log(e.message);
 
       return left(e.message);
     } catch (e) {
+      if(e.toString().split(' ')[0] == 'ClientException'){
+        return left('Tidak Ada Koneksi Internet');
+      }
       return left(e.toString());
     }
   }
@@ -95,9 +107,15 @@ class DataVisualisasiRepositoryImpl implements DataVisualisasiRepository {
           .ambilDataVisualisasiDistribusiTingkatStres(usahaId, tahun, bulan);
       return right(response);
     } on PostgrestException catch (e) {
+      if(e.message.split(' ')[0] == 'ClientException'){
+        return left('Tidak Ada Koneksi Internet');
+      }
       log(e.message);
       return left(e.message);
     } catch (e) {
+      if(e.toString().split(' ')[0] == 'ClientException'){
+        return left('Tidak Ada Koneksi Internet');
+      }
       return left(e.toString());
     }
   }
@@ -114,9 +132,15 @@ class DataVisualisasiRepositoryImpl implements DataVisualisasiRepository {
           .ambilDataVisualisasiDistribusiPenyebabStres(usahaId, tahun, bulan);
       return right(response);
     } on PostgrestException catch (e) {
+      if(e.message.split(' ')[0] == 'ClientException'){
+        return left('Tidak Ada Koneksi Internet');
+      }
       log(e.message);
       return left(e.message);
     } catch (e) {
+      if(e.toString().split(' ')[0] == 'ClientException'){
+        return left('Tidak Ada Koneksi Internet');
+      }
       log(e.toString());
 
       return left(e.toString());
@@ -137,9 +161,15 @@ class DataVisualisasiRepositoryImpl implements DataVisualisasiRepository {
           );
       return right(response);
     } on PostgrestException catch (e) {
+      if(e.message.split(' ')[0] == 'ClientException'){
+        return left('Tidak Ada Koneksi Internet');
+      }
       log(e.message);
       return left(e.message);
     } catch (e) {
+      if(e.toString().split(' ')[0] == 'ClientException'){
+        return left('Tidak Ada Koneksi Internet');
+      }
       log(e.toString());
       return left(e.toString());
     }
@@ -159,9 +189,15 @@ class DataVisualisasiRepositoryImpl implements DataVisualisasiRepository {
           );
       return right(response);
     } on PostgrestException catch (e) {
+      if(e.message.split(' ')[0] == 'ClientException'){
+        return left('Tidak Ada Koneksi Internet');
+      }
       log(e.message);
       return left(e.message);
     } catch (e) {
+      if(e.toString().split(' ')[0] == 'ClientException'){
+        return left('Tidak Ada Koneksi Internet');
+      }
       log(e.toString());
       return left(e.toString());
     }

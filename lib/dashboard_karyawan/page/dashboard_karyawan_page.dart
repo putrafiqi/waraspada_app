@@ -4,6 +4,7 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:waraspada_app/common/dialog/dialog.dart';
 
 import '../../authencation/authentication.dart';
+import '../../common/blocs/blocs.dart';
 import '../../data/data.dart';
 import '../../survei_karyawan/page/survei_karyawan_page.dart';
 import '../bloc/check_survei/check_survei_bloc.dart';
@@ -75,7 +76,7 @@ class _DashboardKaryawanViewState extends State<DashboardKaryawanView> {
         forceMaterialTransparency: true,
         title: const Text('Dashboard'),
       ),
-      body: RefreshIndicator(
+      body: _KrefreshIndicator(
         onRefresh: () async {
           await Future.delayed(Duration.zero);
           if (!context.mounted) return;
@@ -99,7 +100,7 @@ class _DashboardKaryawanViewState extends State<DashboardKaryawanView> {
         },
         child: SafeArea(
           child: SingleChildScrollView(
-            padding: EdgeInsets.symmetric(horizontal: 16),
+            padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Column(
               spacing: 16,
               crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -115,7 +116,7 @@ class _DashboardKaryawanViewState extends State<DashboardKaryawanView> {
                   builder: (context, state) {
                     if (state.isSudahSurvei == true) {
                       return Container(
-                        padding: EdgeInsets.all(16),
+                        padding: const EdgeInsets.all(16),
                         decoration: BoxDecoration(
                           color: Colors.green.shade50,
                           borderRadius: BorderRadius.circular(16),
@@ -133,21 +134,20 @@ class _DashboardKaryawanViewState extends State<DashboardKaryawanView> {
                         ),
                       );
                     }
-                    return InkWell(
-                      borderRadius: BorderRadius.circular(16),
+                    return _KinkWell(
                       onTap: () {
                         Navigator.of(context).push(
                           MaterialPageRoute(
                             builder:
                                 (_) => BlocProvider.value(
                                   value: context.read<CheckSurveiBloc>(),
-                                  child: SurveiKaryawanPage(),
+                                  child: const SurveiKaryawanPage(),
                                 ),
                           ),
                         );
                       },
                       child: Container(
-                        padding: EdgeInsets.all(16),
+                        padding: const EdgeInsets.all(16),
                         decoration: BoxDecoration(
                           border: Border.all(color: Colors.grey.shade200),
                           borderRadius: BorderRadius.circular(16),
@@ -159,7 +159,7 @@ class _DashboardKaryawanViewState extends State<DashboardKaryawanView> {
                               'Ada Survei Bulan ini',
                               style: textTheme.titleMedium,
                             ),
-                            Icon(LucideIcons.chevronRight),
+                            const Icon(LucideIcons.chevronRight),
                           ],
                         ),
                       ),
@@ -207,6 +207,44 @@ class _DashboardKaryawanViewState extends State<DashboardKaryawanView> {
           ),
         ),
       ),
+    );
+  }
+}
+
+class _KrefreshIndicator extends StatelessWidget {
+  const _KrefreshIndicator({required this.onRefresh, required this.child});
+
+  final Future<void> Function() onRefresh;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    final isConnected = context.watch<NetworkCheckerBloc>().state.isConnected;
+    return RefreshIndicator(
+      onRefresh: isConnected ? onRefresh : () async {},
+      child: child,
+    );
+  }
+}
+
+class _KinkWell extends StatelessWidget {
+  const _KinkWell({required this.onTap, required this.child});
+
+  final VoidCallback onTap;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    final isConnected = context.watch<NetworkCheckerBloc>().state.isConnected;
+    return InkWell(
+      borderRadius: BorderRadius.circular(16),
+      onTap:
+          isConnected
+              ? onTap
+              : () async {
+                ShowToast.showEror('Tidak ada koneksi internet');
+              },
+      child: child,
     );
   }
 }

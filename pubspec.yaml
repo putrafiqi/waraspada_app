@@ -51,6 +51,7 @@ dependencies:
   skeletonizer: ^1.4.3
   datepicker_dropdown: ^0.1.7
   survey_kit: ^1.0.0
+  internet_connection_checker_plus: ^2.7.2
 
 dev_dependencies:
   flutter_test:

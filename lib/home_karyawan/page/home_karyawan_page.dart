@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
+import '../../common/blocs/blocs.dart';
+import '../../common/dialog/dialog.dart';
 import '../../dashboard_karyawan/dashboard_karyawan.dart';
 import '../../profile/page/page.dart';
 
@@ -22,6 +25,7 @@ class HomeKaryawanView extends StatefulWidget {
 
 class _HomeKaryawanViewState extends State<HomeKaryawanView> {
   int currentIndex = 0;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,17 +39,27 @@ class _HomeKaryawanViewState extends State<HomeKaryawanView> {
           });
         },
         destinations: [
-          NavigationDestination(
+          const NavigationDestination(
             icon: Icon(LucideIcons.house),
             label: 'Dashboard',
           ),
 
-          NavigationDestination(icon: Icon(LucideIcons.user), label: 'Profile'),
+          const NavigationDestination(
+            icon: Icon(LucideIcons.user),
+            label: 'Profile',
+          ),
         ],
       ),
-      body: IndexedStack(
-        index: currentIndex,
-        children: [DashboardKaryawanPage(), ProfilePage()],
+      body: BlocListener<NetworkCheckerBloc, NetworkCheckerState>(
+        listener: (context, state) {
+          if (!state.isConnected) {
+            ShowToast.showEror('Tidak ada koneksi internet');
+          }
+        },
+        child: IndexedStack(
+          index: currentIndex,
+          children: [const DashboardKaryawanPage(), const ProfilePage()],
+        ),
       ),
     );
   }
